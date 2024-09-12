@@ -42,7 +42,7 @@ npm install npm@latest -g
 
 ```sh
 
-git clone https://github.com/github_username/repo_name.git
+git clone https://github.com/martenjurgens/webexpert-vanilla.git
 
 ```
 
