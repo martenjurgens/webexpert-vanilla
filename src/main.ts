@@ -1,6 +1,24 @@
 import './style.css'
 import { User } from './types/types.ts'
 
+const storedUsersData = sessionStorage.getItem('users')
+const usersData = storedUsersData ? JSON.parse(storedUsersData) : []
+
+const searchInput = document.getElementById('search') as HTMLInputElement
+
+searchInput.addEventListener('input', (event: any) => {
+  const filteredUsers = usersData?.filter((user: User) =>
+    user.name.toLowerCase().includes(event.target.value.toLowerCase())
+  )
+  displayUsers(filteredUsers)
+})
+
+if (!storedUsersData) {
+  fetchData()
+} else {
+  displayUsers(usersData)
+}
+
 async function fetchData() {
   try {
     const response = await fetch('https://jsonplaceholder.typicode.com/users')
@@ -15,7 +33,10 @@ async function fetchData() {
 async function displayUsers(users: User[]) {
   const usersSection =
     document.querySelector<HTMLButtonElement>('.users-section')!
-  users.forEach((user: User) => {
+
+  usersSection.innerHTML = ''
+
+  users?.forEach((user: User) => {
     const userDiv = document.createElement('div')
     userDiv.classList.add('user-card')
 
@@ -38,13 +59,4 @@ async function displayUsers(users: User[]) {
       window.location.href = `/user-details.html?id=${user.id}`
     })
   })
-}
-
-const storedUsersData = sessionStorage.getItem('users')
-
-if (!storedUsersData) {
-  fetchData()
-} else {
-  const usersData = JSON.parse(storedUsersData)
-  displayUsers(usersData)
 }
